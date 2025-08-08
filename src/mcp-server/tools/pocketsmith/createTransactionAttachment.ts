@@ -109,7 +109,7 @@ export async function createTransactionAttachmentLogic(
 
   // Step 1: Create the attachment for the user
   const attachment = await service.createUserAttachment(
-    userId,
+    userId!,
     {
       title: params.title,
       file_name: params.fileName,
