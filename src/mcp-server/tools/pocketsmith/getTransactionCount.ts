@@ -145,7 +145,7 @@ export async function getTransactionCountLogic(
   const suggestedBatchSize = Math.min(50, Math.max(10, estimatedUncategorized + estimatedNeedsReview));
   const estimatedPages = Math.ceil(estimatedTotal / 30); // PocketSmith default page size
   
-  const priorityOrder = [];
+  const priorityOrder: string[] = [];
   if (estimatedUncategorized > 0) {
     priorityOrder.push("uncategorized transactions (highest priority)");
   }

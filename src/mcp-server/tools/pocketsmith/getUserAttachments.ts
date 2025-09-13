@@ -85,7 +85,7 @@ export async function getUserAttachmentsLogic(
   }
 
   // Get the user attachments
-  const attachments = await service.getUserAttachments(userId, context);
+  const attachments = await service.getUserAttachments(userId!, context);
 
   const response: GetUserAttachmentsResponse = {
     attachments: (attachments || []).map((attachment) => ({
@@ -99,7 +99,7 @@ export async function getUserAttachmentsLogic(
       created_at: attachment.created_at,
       updated_at: attachment.updated_at,
     })),
-    userId: userId,
+    userId: userId!,
     count: (attachments || []).length,
   };
 
