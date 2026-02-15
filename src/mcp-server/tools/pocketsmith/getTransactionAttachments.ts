@@ -12,6 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const GetTransactionAttachmentsInputSchema = z.object({
   apiKey: z
@@ -123,7 +124,7 @@ export const registerGetTransactionAttachmentsTool = async (
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Get PocketSmith Transaction Attachments",

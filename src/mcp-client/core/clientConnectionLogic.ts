@@ -81,12 +81,9 @@ export async function establishNewMcpConnection(
   };
 
   const clientCapabilities: ClientCapabilities = {
-    resources: { list: true, read: true, templates: { list: true } },
-    tools: { list: true, call: true },
-    prompts: { list: true, get: true },
-    logging: { setLevel: true },
     roots: { listChanged: true },
-    // ping, cancellation, progress are implicitly supported by SDK Client
+    // resources, tools, prompts, and logging capabilities are handled
+    // implicitly by the SDK Client in the 2025-03-26 spec
   };
   logger.debug("Client identity and capabilities defined", {
     ...operationContext,

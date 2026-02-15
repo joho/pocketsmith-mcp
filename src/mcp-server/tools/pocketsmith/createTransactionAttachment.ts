@@ -13,6 +13,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const CreateTransactionAttachmentInputSchema = z.object({
   apiKey: z
@@ -101,7 +102,7 @@ export async function createTransactionAttachmentLogic(
   const service = new PocketSmithService(apiKey, accessToken);
 
   // Get user ID if not provided
-  let userId = params.userId;
+  let userId: number = params.userId ?? 0;
   if (!userId) {
     const currentUser = await service.getCurrentUser(context);
     userId = currentUser.id ?? 0;
@@ -168,7 +169,7 @@ export const registerCreateTransactionAttachmentTool = async (
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Create PocketSmith Transaction Attachment",

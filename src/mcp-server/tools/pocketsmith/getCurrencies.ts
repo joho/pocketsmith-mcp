@@ -12,6 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const GetCurrenciesInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -92,7 +93,7 @@ export const registerGetCurrenciesTool = async (server: McpServer): Promise<void
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Get PocketSmith Currencies",

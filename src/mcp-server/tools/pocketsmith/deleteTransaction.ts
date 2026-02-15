@@ -12,6 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const DeleteTransactionInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -100,7 +101,7 @@ export const registerDeleteTransactionTool = async (server: McpServer): Promise<
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Delete PocketSmith Transaction",

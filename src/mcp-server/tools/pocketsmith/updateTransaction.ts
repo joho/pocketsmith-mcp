@@ -12,7 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
-import { NULLABLE_FIELDS } from "./schemaHelpers.js";
+import { NULLABLE_FIELDS, registerTool } from "./schemaHelpers.js";
 
 export const UpdateTransactionInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -159,7 +159,7 @@ export const registerUpdateTransactionTool = async (server: McpServer): Promise<
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Update PocketSmith Transaction",

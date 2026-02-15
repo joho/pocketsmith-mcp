@@ -12,6 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const GetAccountTransactionsInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -76,7 +77,7 @@ export async function getAccountTransactionsLogic(
   const transactionAccounts = await service.getTransactionAccounts(user.id!, context);
   
   // Find the requested transaction account
-  const account = transactionAccounts.find(acc => acc.id === params.accountId);
+  const account = transactionAccounts.find((acc: any) => acc.id === params.accountId);
   if (!account) {
     throw new McpError(
       BaseErrorCode.NOT_FOUND,
@@ -100,7 +101,7 @@ export async function getAccountTransactionsLogic(
   let totalCredit = 0;
   let totalDebit = 0;
   
-  const processedTransactions = transactions.map(transaction => {
+  const processedTransactions = transactions.map((transaction: any) => {
     const amount = transaction.amount ?? 0;
     if (amount > 0) {
       totalCredit += amount;
@@ -170,7 +171,7 @@ export const registerGetAccountTransactionsTool = async (server: McpServer): Pro
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Get Account Transactions",

@@ -12,7 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
-import { NULLABLE_FIELDS, REQUIRED_NULLABLE_FIELDS } from "./schemaHelpers.js";
+import { NULLABLE_FIELDS, REQUIRED_NULLABLE_FIELDS, registerTool } from "./schemaHelpers.js";
 
 export const UpdateCategoryInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -153,7 +153,7 @@ export const registerUpdateCategoryTool = async (server: McpServer): Promise<voi
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Update PocketSmith Category",

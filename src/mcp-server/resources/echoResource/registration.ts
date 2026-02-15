@@ -9,6 +9,7 @@ import {
   McpServer,
   ResourceTemplate,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { Variables } from "@modelcontextprotocol/sdk/shared/uriTemplate.js";
 import type {
   ListResourcesResult,
   ReadResourceResult,
@@ -56,19 +57,18 @@ export const registerEchoResource = async (
         },
       });
 
-      server.resource(
+      server.registerResource(
         resourceName,
         template,
         {
-          name: "Echo Message Resource",
           description: "A simple echo resource that returns a message.",
           mimeType: "application/json",
-          examples: [{ name: "Basic echo", uri: "echo://hello" }],
         },
         async (
           uri: URL,
-          params: EchoResourceParams,
+          variables: Variables,
         ): Promise<ReadResourceResult> => {
+          const params: EchoResourceParams = variables as unknown as EchoResourceParams;
           const handlerContext: RequestContext =
             requestContextService.createRequestContext({
               parentRequestId: registrationContext.requestId,

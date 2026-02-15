@@ -12,6 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const GetBudgetsInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -64,7 +65,7 @@ export async function getBudgetsLogic(
   const budgetData = await service.getBudgets(user.id ?? 0, context);
 
   // Process budget analysis
-  const budgetAnalysis = budgetData.map((item) => {
+  const budgetAnalysis = budgetData.map((item: any) => {
     // Use available properties from the budget response
     const actual = item.expense?.total_actual_amount || 0;
     // Use periods data for budget information if available
@@ -92,7 +93,7 @@ export async function getBudgetsLogic(
   let categoriesOverBudget = 0;
   let categoriesUnderBudget = 0;
 
-  budgetAnalysis.forEach(item => {
+  budgetAnalysis.forEach((item: any) => {
     if (item.budget) {
       totalBudgeted += item.budget;
       if (item.actual > item.budget) {
@@ -139,7 +140,7 @@ export const registerGetBudgetsTool = async (server: McpServer): Promise<void> =
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Get PocketSmith Budget Analysis",

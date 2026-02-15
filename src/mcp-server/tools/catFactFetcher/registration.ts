@@ -43,7 +43,7 @@ export const registerCatFactFetcherTool = async (
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      (server.registerTool as any)(
         toolName,
         {
           title: "Get Random Cat Fact",

@@ -33,7 +33,7 @@ export function registerFetchImageTestTool(server: McpServer): void {
 
   ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      (server.registerTool as any)(
         toolName,
         {
           title: "Fetch Cat Image",

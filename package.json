@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/joho/pocketsmith-mcp#readme",
   "scripts": {
-    "build": "tsc && chmod +x dist/index.js",
+    "build": "NODE_OPTIONS='--max-old-space-size=8192' tsc && chmod +x dist/index.js",
     "start": "node dist/index.js",
     "start:stdio": "MCP_LOG_LEVEL=debug MCP_TRANSPORT_TYPE=stdio node dist/index.js",
     "start:http": "MCP_LOG_LEVEL=debug MCP_TRANSPORT_TYPE=http node dist/index.js",

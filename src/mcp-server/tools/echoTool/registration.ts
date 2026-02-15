@@ -41,7 +41,7 @@ export const registerEchoTool = async (server: McpServer): Promise<void> => {
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      (server.registerTool as any)(
         toolName,
         {
           title: "Echo Message",

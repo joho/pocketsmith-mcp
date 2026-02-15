@@ -12,6 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const GetBudgetSummaryInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -129,16 +130,16 @@ export async function getBudgetSummaryLogic(
 
   // Calculate overall summary
   const totalPeriods = processedBudgetSummary[0]?.periods.length || 0;
-  const overallBudget = processedBudgetSummary.reduce((sum, cat) => sum + cat.overall.total_budget, 0);
-  const overallActual = processedBudgetSummary.reduce((sum, cat) => sum + cat.overall.total_actual, 0);
+  const overallBudget = processedBudgetSummary.reduce((sum: number, cat: any) => sum + cat.overall.total_budget, 0);
+  const overallActual = processedBudgetSummary.reduce((sum: number, cat: any) => sum + cat.overall.total_actual, 0);
   const overallDifference = overallBudget - overallActual;
   const overallPercentage = overallBudget > 0 ? Math.round((overallActual / overallBudget) * 100) : 0;
 
   const categoriesOverBudget = processedBudgetSummary.filter(
-    cat => cat.overall.total_actual > cat.overall.total_budget
+    (cat: any) => cat.overall.total_actual > cat.overall.total_budget
   ).length;
   const categoriesUnderBudget = processedBudgetSummary.filter(
-    cat => cat.overall.total_actual <= cat.overall.total_budget && cat.overall.total_budget > 0
+    (cat: any) => cat.overall.total_actual <= cat.overall.total_budget && cat.overall.total_budget > 0
   ).length;
 
   const response: GetBudgetSummaryResponse = {
@@ -180,7 +181,7 @@ export const registerGetBudgetSummaryTool = async (server: McpServer): Promise<v
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Get PocketSmith Budget Summary",

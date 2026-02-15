@@ -3,6 +3,34 @@
  */
 
 import { z } from "zod";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { ToolAnnotations } from "@modelcontextprotocol/sdk/types.js";
+
+/**
+ * Type-safe wrapper around server.registerTool that avoids TS2589
+ * "Type instantiation is excessively deep and possibly infinite" errors.
+ *
+ * The MCP SDK's registerTool generic inference creates excessively deep
+ * type instantiation when used with Zod schema shapes, causing OOM during
+ * compilation when many tools are registered.
+ */
+export function registerTool(
+  server: McpServer,
+  name: string,
+  config: {
+    title?: string;
+    description?: string;
+    inputSchema?: z.ZodRawShape;
+    outputSchema?: z.ZodRawShape;
+    annotations?: ToolAnnotations;
+    _meta?: Record<string, unknown>;
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cb: (...args: any[]) => any,
+) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (server.registerTool as any)(name, config, cb);
+}
 
 /**
  * Creates a nullable field schema that accepts both the type and null

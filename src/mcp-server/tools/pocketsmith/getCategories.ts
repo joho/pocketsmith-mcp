@@ -12,6 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const GetCategoriesInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -65,14 +66,14 @@ export async function getCategoriesLogic(
   const categories = await service.getCategories(user.id ?? 0, context);
 
   // Process categories and create hierarchy
-  const processedCategories = categories.map(category => ({
+  const processedCategories = categories.map((category: any) => ({
     id: category.id ?? 0,
     title: category.title ?? '',
     colour: category.colour ?? null,
     is_bill: category.is_bill ?? false,
     is_transfer: category.is_transfer ?? false,
     parent_id: category.parent_id ?? null,
-    children: category.children?.map(child => ({
+    children: category.children?.map((child: any) => ({
       id: child.id ?? 0,
       title: child.title ?? '',
       colour: child.colour ?? null,
@@ -82,9 +83,9 @@ export async function getCategoriesLogic(
   // Calculate summary
   const summary = {
     totalCategories: categories.length,
-    billCategories: categories.filter(c => c.is_bill ?? false).length,
-    transferCategories: categories.filter(c => c.is_transfer ?? false).length,
-    parentCategories: categories.filter(c => !c.parent_id).length,
+    billCategories: categories.filter((c: any) => c.is_bill ?? false).length,
+    transferCategories: categories.filter((c: any) => c.is_transfer ?? false).length,
+    parentCategories: categories.filter((c: any) => !c.parent_id).length,
   };
 
   const response: GetCategoriesResponse = {
@@ -114,7 +115,7 @@ export const registerGetCategoresTool = async (server: McpServer): Promise<void>
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Get PocketSmith Categories",

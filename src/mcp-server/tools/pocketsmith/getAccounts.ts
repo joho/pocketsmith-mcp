@@ -12,6 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const GetAccountsInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -64,7 +65,7 @@ export async function getAccountsLogic(
   const accounts = await service.getAccounts(user.id ?? 0, context);
   
   // Calculate total balance
-  const totalBalance = accounts.reduce((sum, account) => {
+  const totalBalance = accounts.reduce((sum: number, account: any) => {
     return sum + (account.current_balance_in_base_currency || 0);
   }, 0);
 
@@ -74,7 +75,7 @@ export async function getAccountsLogic(
       name: user.name ?? '',
       email: user.email ?? '',
     },
-    accounts: accounts.map(account => ({
+    accounts: accounts.map((account: any) => ({
       id: account.id ?? 0,
       name: account.title ?? '',
       type: account.type ?? '',
@@ -112,7 +113,7 @@ export const registerGetAccountsTool = async (server: McpServer): Promise<void> 
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Get PocketSmith Accounts",

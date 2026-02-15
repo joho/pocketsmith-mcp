@@ -12,6 +12,7 @@ import {
   requestContextService,
 } from "../../../utils/index.js";
 import { PocketSmithService } from "../../../services/pocketsmith.js";
+import { registerTool } from "./schemaHelpers.js";
 
 export const CreateCategoryInputSchema = z.object({
   apiKey: z.string().optional().describe("PocketSmith API key (if not set via environment)"),
@@ -64,7 +65,7 @@ export async function createCategoryLogic(
   if (params.parentId) {
     try {
       const categories = await service.getCategories(user.id!, context);
-      const parentCategory = categories.find(cat => cat.id === params.parentId);
+      const parentCategory = categories.find((cat: any) => cat.id === params.parentId);
       if (!parentCategory) {
         throw new McpError(
           BaseErrorCode.NOT_FOUND,
@@ -134,7 +135,7 @@ export const registerCreateCategoryTool = async (server: McpServer): Promise<voi
 
   await ErrorHandler.tryCatch(
     async () => {
-      server.registerTool(
+      registerTool(server,
         toolName,
         {
           title: "Create PocketSmith Category",
